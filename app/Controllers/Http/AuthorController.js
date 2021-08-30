@@ -15,11 +15,14 @@ class AuthorController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
-    //const authors = await Author.query(decodeQuery()).fetch()
-    //return response.apiCollection(authors)
+    const authors = await Author.all()
+    return response.ok({
+      status: 201,
+      message: 'PAPA RE LISTO',
+      data: authors,
+    })
   }
 
   /**
@@ -29,9 +32,8 @@ class AuthorController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async create ({ request, response, view }) {
+  async create ({ request, response }) {
   }
 
   /**
@@ -59,10 +61,16 @@ class AuthorController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params, request, response }) {
+    const authors = await Author.find(params.id)
+    return response.ok({
+      status: 201,
+      message: 'PAPA RE LISTO',
+      data: authors,
+    })
   }
+
 
   /**
    * Render a form to update an existing author.
@@ -71,9 +79,9 @@ class AuthorController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async edit ({ params, request, response, view }) {
+  async edit ({ params, request, response }){
+
   }
 
   /**
@@ -85,6 +93,14 @@ class AuthorController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+    const authors = await Author.find(params.id)
+    authors.merge(request.all())
+    await authors.save()
+    return response.ok({
+      status: 201,
+      message: 'PAPA RE UPDATEADO ESO ESTA YA CHANGED',
+      data: authors,
+    })
   }
 
   /**
@@ -96,6 +112,13 @@ class AuthorController {
    * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
+    const authors = await Author.findOrFail(params.id)
+    await authors.delete()
+    return response.ok({
+      status: 201,
+      message: 'PAPA RE ELMINADO NI EL PADRINO TE LO HACE ASI',
+      data: authors,
+    })
   }
 }
 

@@ -5,9 +5,9 @@ const Schema = use('Schema')
 
 class AuthorBookSchema extends Schema {
   async up() {
-    const exits = await this.hasTable('author_books')
+    const exits = await this.hasTable('author_book')
     if (!exits) {
-      this.createTable('author_books', (table) => {
+      this.createTable('author_book', (table) => {
         table.increments('id')
         table.timestamps(true)
         table.integer('author_id').notNullable().unsigned()
@@ -18,9 +18,9 @@ class AuthorBookSchema extends Schema {
 
 
   async down() {
-    const exits = await this.hasTable('author_books')
+    const exits = await this.hasTable('author_book')
     if (exits) {
-      this.drop('author_books')
+      this.drop('author_book')
     }
   }
 }

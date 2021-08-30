@@ -3,6 +3,10 @@
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
+const Book = use('App/Models/Book')
+const Genre = use('App/Models/Genre')
+const Mail = use('Mail')
+const Tag = use('App/Models/Tag')
 
 /**
  * Resourceful controller for interacting with books
@@ -15,9 +19,16 @@ class BookController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    const books = await Book.query()
+      .with("genre")
+      .fetch()
+    return response.ok({
+      status: 201,
+      message: 'PAPA RE LISTO',
+      data: books,
+    })
   }
 
   /**
@@ -41,6 +52,24 @@ class BookController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    const book = await Book.create(request.only(['title','genre_id','publishe_at','resume']))
+    const authors = request.only(['authors'])
+    const tags = request.only(['tags'])
+
+    await book.load("genre")
+    await book.syncAuthors(authors)
+    await book.syncTags(tags)
+
+    await Mail.send('emails.email', {book:book.toJSON()}, (message) => {
+      message
+        .to('rivas.jesus93@gmail.com')
+        .subject('Wenas probando lo de la library')
+    })
+    return response.created({
+      status: 201,
+      message: 'MAMALON SE CREO',
+      data: book,
+    })
   }
 
   /**
@@ -50,9 +79,14 @@ class BookController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  async show ({ params, request, response,  }) {
+    const book = await Book.find(params.id)
+    return response.ok({
+      status: 201,
+      message: 'PAPA RE LISTO',
+      data: book,
+    })
   }
 
   /**
@@ -62,9 +96,8 @@ class BookController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async edit ({ params, request, response, view }) {
+  async edit ({ params, request, response,  }) {
   }
 
   /**
@@ -75,7 +108,15 @@ class BookController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+    async update ({ params, request, response }) {
+    const book = await Book.find(params.id)
+    book.merge(request.all())
+    await book.save()
+    return response.ok({
+      status: 201,
+      message: 'PAPA RE UPDATEADO ESO ESTA YA CHANGED',
+      data: book,
+    })
   }
 
   /**
@@ -87,6 +128,13 @@ class BookController {
    * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
+    const book = await Book.findOrFail(params.id)
+    await book.delete()
+    return response.ok({
+      status: 201,
+      message: 'PAPA RE ELMINADO NI EL PADRINO TE LO HACE ASI',
+      data: book,
+    })
   }
 }
 

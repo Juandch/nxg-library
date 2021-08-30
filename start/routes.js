@@ -29,3 +29,11 @@ Route.resource('authors','AuthorController').validator(new Map([
   [['authors.store'],['StoreAuthor']],
   [['authors.update'],['UpdateAuthor']]
 ])).apiOnly()
+
+Route.group(
+  ()=>{
+    Route.post('upload/:id', 'FileController.upload');
+    Route.get('download/:fileName', 'FileController.download');
+  }
+).prefix('api/');
+

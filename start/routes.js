@@ -20,20 +20,20 @@ Route.get('/', ({ request }) => {
   return { greeting: 'Hello world in JSON' }
 })
 
-Route.resource('books','BookController').validator(new Map([
-    [['books.store'],['StoreBook']],
-    [['books.update'],['UpdateBook']]
-])).apiOnly()
-
-Route.resource('authors','AuthorController').validator(new Map([
-  [['authors.store'],['StoreAuthor']],
-  [['authors.update'],['UpdateAuthor']]
-])).apiOnly()
+  Route.resource('books','BookController').validator(new Map([
+      [['books.store'],['StoreBook']],
+      [['books.update'],['UpdateBook']]
+  ])).apiOnly()
+  Route.resource('authors','AuthorController').validator(new Map([
+    [['authors.store'],['StoreAuthor']],
+    [['authors.update'],['UpdateAuthor']]
+  ])).apiOnly()
+  
 
 Route.group(
   ()=>{
     Route.post('upload/:id', 'FileController.upload');
     Route.get('download/:fileName', 'FileController.download');
   }
-).prefix('api/');
+).prefix('/api/');
 

@@ -29,11 +29,16 @@ class Book extends Model {
   }
 
   async syncAuthors(authors){
-    let authorsIds = []
-    for (let x in authors.authors){
-      let thisAuthor = await Author.findBy('name', authors.authors[x])
-      console.log(thisAuthor)
+    var authorsIds = []
+    if(typeof authors.authors == "string"){
+      let thisAuthor = await Author.findBy('name', authors.authors)
       authorsIds.push(thisAuthor.id)
+    }else{
+      for (let x in authors.authors){
+        let thisAuthor = await Author.findBy('name', authors.authors[x])
+        console.log(thisAuthor)
+        authorsIds.push(thisAuthor.id)
+      }
     }
     this.authors().sync(authorsIds)
   }

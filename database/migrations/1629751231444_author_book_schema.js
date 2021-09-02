@@ -10,8 +10,8 @@ class AuthorBookSchema extends Schema {
       this.createTable('author_book', (table) => {
         table.increments('id')
         table.timestamps(true)
-        table.integer('author_id').notNullable().unsigned()
-        table.integer('book_id').notNullable().unsigned()
+        table.integer('author_id').notNullable().unsigned().references('id').inTable('authors').onDelete('CASCADE')
+        table.integer('book_id').notNullable().unsigned().references('id').inTable('books').onDelete('CASCADE')
       })
     }
   }

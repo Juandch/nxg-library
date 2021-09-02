@@ -63,7 +63,8 @@ class AuthorController {
    * @param {Response} ctx.response
    */
   async show ({ params, request, response }) {
-    const authors = await Author.find(params.id)
+    const authors = await Author.query().where('id', params.id).with('books').firstOrFail()
+
     return response.ok({
       status: 201,
       message: 'PAPA RE LISTO',

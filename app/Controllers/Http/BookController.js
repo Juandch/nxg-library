@@ -23,7 +23,7 @@ class BookController {
   async index ({ request, response, view }) {
     const books = await Book.query()
       .with("genre")
-      .fetch()
+      .fetch()  
     return response.ok({
       status: 201,
       message: 'PAPA RE LISTO',
@@ -57,6 +57,7 @@ class BookController {
     const tags = request.only(['tags'])
 
     await book.load("genre")
+    console.log("tipo authors recibido: "+typeof authors.authors)
     await book.syncAuthors(authors)
     await book.syncTags(tags)
 
